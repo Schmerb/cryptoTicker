@@ -137,8 +137,6 @@ class Currencies extends Component {
    * @memberof Currencies
    */
   getTrProps = (state, rowInfo, column) => {
-    // console.log('\n\n\ngetTrProps\n\n\n')
-    // console.log({state, rowInfo, column})
     return {
       style: {
         padding: '15px',
@@ -146,18 +144,15 @@ class Currencies extends Component {
         borderBottom: '1px solid lightgrey'
       },
       onClick: evt => {
-        console.log('Click row', ({rowInfo}))
-        console.log(rowInfo.original)
-        let { currency } = this.props
-        let { rank, id, symbol, name, [`price_${currency.toLowerCase()}`]: price } = rowInfo.original
+        let { id } = rowInfo.original
         let { history } = this.props
 
-        console.log({id, symbol, name, price})
+        console.log('Click row', ({rowInfo}))
+        console.log(rowInfo.original)
         console.log(`/app/${id}`)
 
         history.push({
-          pathname: `/app/${id}`,
-          state: { symbol, name, price, rank }
+          pathname: `/app/${id}`
         })
       }
     }

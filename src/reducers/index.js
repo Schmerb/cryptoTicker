@@ -10,6 +10,7 @@ import cryptoReducer from 'reducers/crypto'
 import displayReducer from 'reducers/display'
 
 import { fetchCoins } from 'utils/https/crypto'
+import { fetchExchangeRates } from 'utils/https/currency'
 
 const store = createStore(
   combineReducers({
@@ -21,6 +22,7 @@ const store = createStore(
 
 // initial fetch
 fetchCoins(store)
+fetchExchangeRates()
 
 // re-fetch every minute
 // setInterval(() => {

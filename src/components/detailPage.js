@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -93,39 +94,41 @@ const Sym = styled.span`
 `
 
 class DetailPage extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {}
+  }
+
+  componentDidMount = () => {
+
+  }
+
   render () {
-    let { history, location, match, crypto, currency } = this.props
+    let { match, currency, coinsById } = this.props
     let { id } = match.params
-    let { rank } = location.state
 
-    console.log({props: this.props})
-    console.log({rank})
-    console.log({crypto})
-
-    if (Object.keys(crypto).length === 0) {
+    if (Object.keys(coinsById).length === 0) {
       return <Container />
     }
 
-    let coin = crypto[rank - 1]
-    console.log({coin})
+    let coin = coinsById[id]
 
-    let { available_supply: availableSupply, symbol } = coin
+    let { available_supply: availableSupply, symbol, rank } = coin
 
-    // Circulating Supply = total_supply
+    // Circulating Supply = available_supply
+    // Total Supply = max_supply/total_supply
 
     const format = num => numeral(num).format('0,0')
 
-    // TOtal SUPPLY = max_supply
     currency = currency.toLowerCase()
     let currentMarketCap = coin[`market_cap_${currency}`]
     let volume24hr = coin[`24h_volume_${currency}`]
-    let totalSupply = coin['max_supply']
+    let totalSupply = coin['max_supply'] || coin['total_supply']
     currentMarketCap = format(currentMarketCap)
     availableSupply = format(availableSupply)
     totalSupply = format(totalSupply)
     volume24hr = format(volume24hr)
-    // const price = numeral(currentPrice).format('0,0.00')
-    // const marketCap = numeral(currentMarketCap).format('0,0')
 
     return (
       <Container>
@@ -154,13 +157,13 @@ class DetailPage extends Component {
             <Box>
               <DataWrap>
                 <label>CIRCULATING SUPPLY</label>
-                <span>$ <Num>{availableSupply}</Num> <Sym>{symbol}</Sym></span>
+                <span><Num>{availableSupply}</Num> <Sym>{symbol}</Sym></span>
               </DataWrap>
             </Box>
             <Box>
               <DataWrap>
                 <label>TOTAL SUPPLY</label>
-                <span>$ <Num>{totalSupply}</Num> <Sym>{symbol}</Sym></span>
+                <span><Num>{totalSupply}</Num> <Sym>{symbol}</Sym></span>
               </DataWrap>
             </Box>
           </Flex>
@@ -170,9 +173,14 @@ class DetailPage extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  crypto: state.crypto,
-  currency: state.display.currency
-})
+const mapStateToProps = (state) => {
+  let { crypto } = state
+  let coinsById = _.keyBy(crypto, 'id')
+  return {
+    coinsById,
+    crypto: state.crypto,
+    currency: state.display.currency
+  }
+}
 
 export default connect(mapStateToProps)(DetailPage)
