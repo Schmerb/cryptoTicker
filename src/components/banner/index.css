@@ -1,0 +1,23 @@
+.custom-select-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 60px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.custom-select {
+  appearance: none;
+  display: inline-block;
+  padding: 4px 3px 3px 5px;
+  margin: 0;
+  font: inherit;
+  line-height: 1.2;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  outline: none; /* remove focus ring from Webkit */
+}
+

@@ -5,12 +5,12 @@ import { Route, Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import numeral from 'numeral'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
-
-import store from 'reducers/'
 import { updateCurrency } from 'actions/display'
-import { fetchCoins } from 'utils/https/crypto'
+
+import { format, convert } from 'utils/'
+import { currencies, ArrowLeftCircle, CaretDown } from 'utils/icons'
+
+import './index.css'
 
 const Header = styled.header`
   color: #666;
@@ -21,9 +21,7 @@ const Header = styled.header`
   padding: 0 50px;
 `
 
-const Title = styled.h2`
-
-`
+const Title = styled.h2``
 
 const DetailsBanner = styled.div`
   display: flex;
@@ -52,11 +50,15 @@ const PriceWrap = styled.div`
 `
 
 const Select = styled.select`
- 
+  
+`
+const SelectWrapper = styled.div`
+  margin-right: 100px;
 `
 
-const SelectWrapper = styled.div`
-  
+const Symbol = styled.span`
+  color: #888;
+  margin-right: 5px;
 `
 
 class Banner extends Component {
@@ -75,9 +77,7 @@ class Banner extends Component {
 
   handleChange = (evt) => {
     let value = evt.target.value
-    // console.log({value})
     let { dispatch } = this.props
-    fetchCoins(store, 10, value)
     dispatch(updateCurrency(value))
   }
 
@@ -95,20 +95,22 @@ class Banner extends Component {
 
     let coin = coinsById[id]
 
-    console.log({id})
-    console.log({coinsById})
-    console.log({coin})
+    // console.log({id})
+    // console.log({coinsById})
+    // console.log({coin})
 
-    currency = currency.toLowerCase()
     let { symbol, name } = coin
-    const price = coin[`price_${currency}`]
+    const price = convert(coin['price_usd'], currency)
     const imgSrc = `/assets/coins/${symbol.toLowerCase()}.svg`
 
     const currentPrice = numeral(price).format('0,0.00')
+    const CurrencySym = currencies[currency]
 
     return (
       <DetailsBanner>
-        <Link style={{marginRight: '25px'}} to='/app'><FontAwesomeIcon color={'#B9D3E7'} icon={faArrowCircleLeft} size='2x' /></Link>
+        <Link style={{marginRight: '25px'}} to='/app'>
+          <ArrowLeftCircle style={{color: '#B9D3E7'}} />
+        </Link>
         <NameWrap>
           <img style={{width: 'auto', height: '48px', marginRight: '20px'}} src={imgSrc} />
           <InnerWrap>
@@ -117,27 +119,31 @@ class Banner extends Component {
           </InnerWrap>
         </NameWrap>
         <PriceWrap>
-          <span>$ {currentPrice}</span>
+          <span><Symbol><CurrencySym /></Symbol> {currentPrice}</span>
         </PriceWrap>
       </DetailsBanner>
     )
   }
 
   render () {
-    let { match } = this.props
-
-    console.log({props: this.props})
+    // console.log({props: this.props})
 
     const Selector = () => (
-      <SelectWrapper>
-        <Select onChange={this.handleChange}>
-          <option value='USD'>USD</option>
-          <option value='GBP'>GBP</option>
-          <option value='EUR'>EUR</option>
-          <option value='JPY'>JPY</option>
-          <option value='KRW'>KRW</option>
-        </Select>
-      </SelectWrapper>
+      <form autoComplete='off'>
+        <SelectWrapper className='custom-select-wrapper'>
+          <Select
+            className='custom-select'
+            onChange={this.handleChange}
+            value={this.props.currency}>
+            <option value='USD'>USD</option>
+            <option value='GBP'>GBP</option>
+            <option value='EUR'>EUR</option>
+            <option value='JPY'>JPY</option>
+            <option value='KRW'>KRW</option>
+          </Select>
+          <CaretDown />
+        </SelectWrapper>
+      </form>
     )
 
     return (
@@ -155,7 +161,6 @@ class Banner extends Component {
 const mapStateToProps = (state) => {
   let { crypto } = state
   let coinsById = _.keyBy(crypto, 'id')
-  console.log({coinsById})
   return {
     coinsById,
     crypto: state.crypto,

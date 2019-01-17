@@ -1,6 +1,6 @@
 import fx from 'money'
 
-export function fetchExchangeRates () {
+export const fetchExchangeRates = () => new Promise((resolve, reject) => {
   let url = 'https://openexchangerates.org/api/latest.json?app_id=7e8707bf6e9c418382a1b62a54300582'
   fetch(url)
     .then(res => res.json())
@@ -14,6 +14,8 @@ export function fetchExchangeRates () {
         fx.rates = rates
         fx.base = base
       }
+
+      resolve()
       // else {
       //   // If not, apply to fxSetup global:
       //   var fxSetup = {
@@ -23,4 +25,4 @@ export function fetchExchangeRates () {
       // }
     })
     .catch(err => console.error(err))
-}
+})

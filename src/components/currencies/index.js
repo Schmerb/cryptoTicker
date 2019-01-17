@@ -1,19 +1,14 @@
-import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import ReactTable from 'react-table'
 import numeral from 'numeral'
+import fx from 'money'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
-
-// import CoinItem from './coinItem'
+import { format, convert } from 'utils/'
+import { currencies, ArrowUp, ArrowDown } from 'utils/icons'
 
 import './table.css'
-
-const ArrowUp = (style) => <FontAwesomeIcon style={style} icon={faArrowUp} size='xs' />
-const ArrowDown = (style) => <FontAwesomeIcon style={style} icon={faArrowDown} size='xs' />
 
 const Container = styled.div``
 
@@ -41,15 +36,11 @@ const Logo = styled.img`
   margin-right: 15px;
 `
 
-// const FontAwe = <FontAwesomeIcon icon={faCoffee} />
-
 class Currencies extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      currency: props.currency
-    }
+    this.state = {}
   }
 
   renderColumns = () => {
@@ -57,11 +48,7 @@ class Currencies extends Component {
       Header: 'CRYPTOCURRENCY',
       accessor: 'name', // String-based value accessors!
       Cell: props => {
-        // console.log({props})
         const imgSrc = `/assets/coins/${props.original.symbol.toLowerCase()}.svg`
-        let num = props.index + 1
-        // console.log({num})
-
         return (
           <CenteredItem className='number'>
             <Index>{++props.index}</Index> <Logo src={imgSrc} /> {props.value}
@@ -71,10 +58,11 @@ class Currencies extends Component {
     }, {
       Header: 'PRICE',
       accessor: d => {
-        let { currency } = this.state
-        let currentPrice = d[`price_${currency.toLowerCase()}`]
+        let { currency } = this.props
+        let currentPrice = convert(d['price_usd'], currency)
         const price = numeral(currentPrice).format('0,0.00')
-        return <CenteredItem><Symbol>$</Symbol> {price}</CenteredItem>
+        const CurrencySym = currencies[currency]
+        return <CenteredItem><Symbol><CurrencySym /></Symbol> {price}</CenteredItem>
       },
       id: 'price_'
       // Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
@@ -82,22 +70,18 @@ class Currencies extends Component {
       Header: 'MARKET CAP',
       id: 'marketCap', // Required because our accessor is not a string
       accessor: d => {
-        let { currency } = this.state
-        let currentMarketCap = d[`market_cap_${currency.toLowerCase()}`]
+        let { currency } = this.props
+        let currentMarketCap = convert(d[`market_cap_usd`], currency)
         const marketCap = numeral(currentMarketCap).format('0,0')
-        return <CenteredItem><Symbol>$</Symbol> {marketCap}</CenteredItem>
+        const CurrencySym = currencies[currency]
+        return <CenteredItem><Symbol><CurrencySym /></Symbol> {marketCap}</CenteredItem>
       } // Custom value accessors!
     }, {
       Header: '24HR CHANGE',
       accessor: d => {
-        // console.log({d})
         let percentChange = numeral(d.percent_change_24h).format('0.00')
         let positive = percentChange >= 0
         let color = positive ? 'green' : 'red'
-        // const arrowSrc = `/assets/icons/arrow-${positive ? 'up' : 'down'}.svg`
-        // return <FontAwesomeIcon icon={'faCoffee'} />
-        // return <span style={{color}}>{percentChange} % <FontAwe /></span>
-
         return <CenteredItem style={{color}}>{percentChange} % <span style={{marginLeft: '10px'}}>{positive ? <ArrowUp /> : <ArrowDown /> }</span></CenteredItem>
       },
       id: 'change24_'
@@ -158,22 +142,22 @@ class Currencies extends Component {
     }
   }
 
-  // renderCoins = () => {
-  //   let { crypto } = this.props
-  //   if (Object.keys(crypto) === 0) return
-
-  //   return _.map(crypto, (coin, key) => {
-  //     return <CoinItem coin={coin} key={coin.id} index={key} />
-  //   })
-  // }
-
   render () {
-    const data = Object.values(this.props.crypto)
-    // console.log({data})
+    let { crypto } = this.props
+    const data = Object.values(crypto)
+    let fxReady = typeof fx !== 'undefined'
+    let noData = Object.keys(crypto).length === 0 || !fxReady
+
+    // console.log({fx})
+    // console.log({type: typeof fx})
+    // console.log({fxReady})
+
     return (
       <Container>
         <TableContainer>
           <ReactTable
+            loading={noData}
+            defaultPageSize={10}
             showPagination={false}
             data={data}
             columns={this.renderColumns()}

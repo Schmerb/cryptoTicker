@@ -20,13 +20,19 @@ const store = createStore(
   applyMiddleware(thunk, logger)
 )
 
-// initial fetch
-fetchCoins(store)
+// fetch exchange rates FIRST to avoid
+// race case between money.js(fx) and React-Table
+// need the fx() library loaded before data can be
+// converted/displayed
 fetchExchangeRates()
+  .then(() => {
+    // initial fetch
+    fetchCoins(store)
 
-// re-fetch every minute
-// setInterval(() => {
-//   fetchCoins(store)
-// }, 60000)
+    // re-fetch every minute
+    // setInterval(() => {
+    //   fetchCoins(store)
+    // }, 60000)
+  })
 
 export default store
