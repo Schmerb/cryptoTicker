@@ -1,0 +1,28 @@
+.rt-th {
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.rt-thead {
+  background-color: #dde2f9;
+  background-color: #ebf0f4;
+  border-top: 1px sold rgba(0,0,0,0.2);
+  border-bottom: 1px sold rgba(0,0,0,0.2);
+  padding: 10px;
+  padding-left: 15%;
+}
+
+.ReactTable .rt-thead.-header {
+  box-shadow: none;
+}
+
+
+.rt-td {
+  display: flex;
+  align-items: center;
+}
+
+.rt-tbody .rt-tr:hover {
+  cursor: pointer;
+  background-color: #dde2f970;
+}
