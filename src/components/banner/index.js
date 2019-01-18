@@ -89,15 +89,6 @@ const CustomSelect = styled.ul`
       : css`
         pointer-events: none;`
 } 
-
-  li {
-    transition: all 0.1s;
-    cursor: pointer;
-
-    &:hover {
-      color: red;
-    }
-  }
 `
 
 const InputWrapper = styled.div`
@@ -130,7 +121,7 @@ const Button = styled.button`
   border-radius: 0;
   border: 0;
   cursor: pointer;
-  transition: all 0.1s;
+  transition: all 0.1s ease;
   text-align: left;
   outline: none; 
 
