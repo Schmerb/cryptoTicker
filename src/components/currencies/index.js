@@ -13,7 +13,7 @@ import './table.css'
 const Container = styled.div``
 
 const Symbol = styled.span`
-  color: #888;
+  color: #aaa;
   margin-right: 5px;
 `
 
@@ -21,6 +21,7 @@ const TableContainer = styled.div`
   background-color: transparent;
   display: flex;
   flex-direction: column;
+  transition: all 2s;
 `
 
 const CenteredItem = styled.span`
@@ -62,7 +63,7 @@ class Currencies extends Component {
         let currentPrice = convert(d['price_usd'], currency)
         const price = numeral(currentPrice).format('0,0.00')
         const CurrencySym = currencies[currency]
-        return <CenteredItem><Symbol><CurrencySym /></Symbol> {price}</CenteredItem>
+        return <CenteredItem style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {price}</CenteredItem>
       },
       id: 'price_'
       // Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
@@ -74,7 +75,7 @@ class Currencies extends Component {
         let currentMarketCap = convert(d[`market_cap_usd`], currency)
         const marketCap = numeral(currentMarketCap).format('0,0')
         const CurrencySym = currencies[currency]
-        return <CenteredItem><Symbol><CurrencySym /></Symbol> {marketCap}</CenteredItem>
+        return <CenteredItem style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {marketCap}</CenteredItem>
       } // Custom value accessors!
     }, {
       Header: '24HR CHANGE',
@@ -82,7 +83,8 @@ class Currencies extends Component {
         let percentChange = numeral(d.percent_change_24h).format('0.00')
         let positive = percentChange >= 0
         let color = positive ? 'green' : 'red'
-        return <CenteredItem style={{color}}>{percentChange} % <span style={{marginLeft: '10px'}}>{positive ? <ArrowUp /> : <ArrowDown /> }</span></CenteredItem>
+        let marginLeft = positive ? '5px' : '0' // accounts for negative symbol of negative/red items
+        return <CenteredItem style={{color, marginLeft}}>{percentChange} % <span style={{marginLeft: '10px'}}>{positive ? <ArrowUp /> : <ArrowDown /> }</span></CenteredItem>
       },
       id: 'change24_'
     }]
@@ -125,7 +127,7 @@ class Currencies extends Component {
       style: {
         padding: '15px',
         paddingLeft: '15%',
-        borderBottom: '1px solid lightgrey'
+        borderBottom: '0.1px solid rgba(0,0,0,0.1)'
       },
       onClick: evt => {
         let { id } = rowInfo.original
@@ -143,18 +145,14 @@ class Currencies extends Component {
   }
 
   render () {
-    let { crypto } = this.props
+    let { crypto, noData } = this.props
     const data = Object.values(crypto)
-    let fxReady = typeof fx !== 'undefined'
-    let noData = Object.keys(crypto).length === 0 || !fxReady
-
-    // console.log({fx})
-    // console.log({type: typeof fx})
-    // console.log({fxReady})
+    // let fxReady = typeof fx !== 'undefined'
+    // let noData = Object.keys(crypto).length === 0 || !fxReady
 
     return (
       <Container>
-        <TableContainer>
+        <TableContainer style={{opacity: noData ? 0 : 1}}>
           <ReactTable
             loading={noData}
             defaultPageSize={10}
@@ -172,9 +170,14 @@ class Currencies extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  crypto: state.crypto,
-  currency: state.display.currency
-})
+const mapStateToProps = (state) => {
+  let { crypto, display } = state
+  const noData = Object.keys(crypto).length === 0
+  return {
+    noData,
+    crypto,
+    currency: display.currency
+  }
+}
 
 export default connect(mapStateToProps)(Currencies)

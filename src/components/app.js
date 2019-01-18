@@ -14,13 +14,46 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  transition: all 0.5s;
 `
 
 const Main = styled.main`
-  flex: 1
+  flex: 1;
+`
+
+const SpinnerWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
 `
 
 class App extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      visible: false
+    }
+  }
+
+  componentDidMount = () => {
+    this.setState({ visible: true })
+  }
+
+  renderSpinner = () => {
+    return (
+      <SpinnerWrap>
+        <Spinner name='three-bounce' color='coral' fadeIn='none' />
+      </SpinnerWrap>
+    )
+  }
+
   render () {
     let { noData, location } = this.props
     if (location.pathname === '/') {
@@ -28,7 +61,7 @@ class App extends Component {
     }
     return (
       <Container>
-        {noData && <Spinner name='three-bounce' color='coral' fadeIn='none' />}
+        {noData && this.renderSpinner()}
         <Banner />
         <Main role='main'>
           <Route exact path='/app' component={Currencies} />

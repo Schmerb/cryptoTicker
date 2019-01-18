@@ -32,7 +32,7 @@ fetchExchangeRates()
     // re-fetch every minute
     // setInterval(() => {
     //   fetchCoins(store)
-    // }, 60000)
+    // }, 10000)
   })
 
 export default store

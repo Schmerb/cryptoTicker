@@ -52,6 +52,7 @@ const DataWrap = styled.div`
   padding: 5px;
 
   label {
+    font-size: 0.95rem;
     margin-bottom: 10px;
   }
 `
@@ -82,8 +83,10 @@ const Rank = styled.div`
 `
 
 const Num = styled.span`
+  font-size: 1.4rem;
   color: #fff;
 `
+
 const Sym = styled.span`
   color: ${green};
   font-weight: bold;
@@ -92,8 +95,10 @@ const Sym = styled.span`
 `
 
 const Symbol = styled.span`
+  display: inline-block;
   color: ${textBlue};
   margin: 0;
+  transform: translateY(-2px);
 `
 
 const CenterVertical = styled.span`
@@ -108,9 +113,7 @@ class DetailPage extends Component {
     this.state = {}
   }
 
-  componentDidMount = () => {
-
-  }
+  componentDidMount = () => {}
 
   render () {
     let { match, currency, coinsById } = this.props

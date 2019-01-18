@@ -2,7 +2,7 @@ import { API_ENDPOINT } from 'config'
 
 import { updateCoinInfo } from 'actions/crypto'
 
-export function fetchCoins (store, limit = 20) {
+export function fetchCoins (store, limit = 10) {
   let url = `${API_ENDPOINT}?limit=${limit}&convert=USD`
 
   fetch(url)
