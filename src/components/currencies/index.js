@@ -5,6 +5,8 @@ import ReactTable from 'react-table'
 import numeral from 'numeral'
 import fx from 'money'
 
+// import DetectScreenSize from 'components/detectScreenSize'
+
 import { format, convert } from 'utils/'
 import { currencies, ArrowUp, ArrowDown } from 'utils/icons'
 
@@ -144,26 +146,41 @@ class Currencies extends Component {
     }
   }
 
+  setScreenDimensions = ({width, height}) => {
+    console.log('setScreenDimensions')
+    console.log({width, height})
+  }
+
   render () {
     let { crypto, noData } = this.props
     const data = Object.values(crypto)
     // let fxReady = typeof fx !== 'undefined'
     // let noData = Object.keys(crypto).length === 0 || !fxReady
 
+    const width = window.innerWidth
+    const height = window.innerHeight
+
+    console.log({width})
+
+    const renderTable = () => <ReactTable
+      loading={noData}
+      defaultPageSize={10}
+      showPagination={false}
+      data={data}
+      columns={this.renderColumns()}
+      getTdProps={this.getTdProps}
+      getTheadProps={this.getTheadProps}
+      getTheadThProps={this.getTheadThProps}
+      getTrProps={this.getTrProps}
+    />
+
     return (
       <Container>
+        {/* <DetectScreenSize
+          handleResize={this.setScreenDimensions}
+          getDimensions={this.setScreenDimensions} /> */}
         <TableContainer style={{opacity: noData ? 0 : 1}}>
-          <ReactTable
-            loading={noData}
-            defaultPageSize={10}
-            showPagination={false}
-            data={data}
-            columns={this.renderColumns()}
-            getTdProps={this.getTdProps}
-            getTheadProps={this.getTheadProps}
-            getTheadThProps={this.getTheadThProps}
-            getTrProps={this.getTrProps}
-          />
+          {width > 660 && renderTable()}
         </TableContainer>
       </Container>
     )

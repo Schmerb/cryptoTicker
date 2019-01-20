@@ -7,6 +7,9 @@ import Spinner from 'react-spinkit'
 import Banner from 'components/banner/index'
 import Currencies from 'components/currencies/index'
 import DetailPage from 'components/detailPage'
+import DetectScreenSize from 'components/detectScreenSize'
+
+import { updateDimensions } from 'actions/display'
 
 import './app.css'
 
@@ -46,6 +49,13 @@ class App extends Component {
     this.setState({ visible: true })
   }
 
+  setScreenDimensions = ({width, height}) => {
+    console.log('setScreenDimensions')
+    console.log({width, height})
+    let { dispatch } = this.props
+    dispatch(updateDimensions({width, height}))
+  }
+
   renderSpinner = () => {
     return (
       <SpinnerWrap>
@@ -63,6 +73,9 @@ class App extends Component {
       <Container>
         {noData && this.renderSpinner()}
         <Banner />
+        <DetectScreenSize
+          handleResize={this.setScreenDimensions}
+          getDimensions={this.setScreenDimensions} />
         <Main role='main'>
           <Route exact path='/app' component={Currencies} />
           <Route path='/app/:id' component={DetailPage} />

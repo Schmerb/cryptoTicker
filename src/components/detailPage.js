@@ -113,7 +113,9 @@ class DetailPage extends Component {
     this.state = {}
   }
 
-  componentDidMount = () => {}
+  componentDidMount = () => {
+
+  }
 
   render () {
     let { match, currency, coinsById } = this.props

@@ -288,7 +288,8 @@ class Banner extends Component {
           <Route exact path='/app' component={this.renderTitle} />
           <Route exact path='/app/:id' component={this.renderDetails} />
         </div>
-        <Route path='/app' component={this.renderCustomSelect} />
+        {/* <Route path='/app' component={this.renderCustomSelect} /> */}
+        {this.renderCustomSelect()}
       </Header>
     )
   }
