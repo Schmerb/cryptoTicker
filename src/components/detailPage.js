@@ -98,7 +98,7 @@ const Symbol = styled.span`
   display: inline-block;
   color: ${textBlue};
   margin: 0;
-  transform: translateY(-2px);
+  transform: translateY(-5px);
 `
 
 const CenterVertical = styled.span`
