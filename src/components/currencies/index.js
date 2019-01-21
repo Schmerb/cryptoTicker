@@ -76,7 +76,7 @@ class Currencies extends Component {
         let currentPrice = convert(d['price_usd'], currency)
         const price = numeral(currentPrice).format('0,0.00')
         const CurrencySym = currencies[currency]
-        const justifyContent = width < smallDevice ? 'center' : 'flex-start'
+        const justifyContent = width < smallDevice ? 'flex-end' : 'flex-start'
         return <CenteredItem style={{justifyContent, fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {price}</CenteredItem>
       },
       id: 'price_'
