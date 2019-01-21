@@ -28,7 +28,6 @@ export default class DetectScreenSize extends Component {
   }
 
   handleResize = () => {
-    console.log('handleResize')
     // only run if we're not throttled
     if (!this.throttled) {
       // actual callback action

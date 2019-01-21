@@ -9,10 +9,10 @@ import DetectOutsideClick from 'components/detectOutsideClick'
 
 import { updateCurrency } from 'actions/display'
 
-import { format, convert } from 'utils/'
+import { convert } from 'utils/'
 import { smallDevice } from 'utils/styles'
 import { superLightBlue, textGrey } from 'utils/colors'
-import { currencies, ArrowLeft, ArrowLeftCircle, CaretDown } from 'utils/icons'
+import { currencies, ArrowLeft, CaretDown } from 'utils/icons'
 
 import './index.css'
 
@@ -176,7 +176,7 @@ class Banner extends Component {
   handleClick = (evt) => {
     let { value } = evt.target.dataset
     let { dispatch } = this.props
-    console.log({value})
+    // console.log({value})
     if (!value) return
 
     dispatch(updateCurrency(value))
@@ -253,8 +253,8 @@ class Banner extends Component {
 
   renderCustomSelect = () => {
     let { visible } = this.state
-    let { currency, width } = this.props
-    let baseCurrencies = ['USD', 'GBP', 'EUR', 'JPY', 'KRW']
+    let { currency } = this.props
+    const baseCurrencies = ['USD', 'GBP', 'EUR', 'JPY', 'KRW']
     return (
       <DetectOutsideClick handleClickAtChild={this.handleOutsideClick}>
         <Form autoComplete='off'>
@@ -287,16 +287,16 @@ class Banner extends Component {
   render () {
     let { opacity } = this.state
     let { width, location, timestamp } = this.props
-    let small = width < smallDevice
-    console.log({opacity})
-    console.log({small})
-    let date = new Date(timestamp)
-    let minutes = date.getMinutes()
-    let hours = date.getHours()
-    let month = date.getUTCMonth() + 1 // months from 1-12
-    let day = date.getUTCDate()
-    let year = date.getUTCFullYear()
-    let lastUpdated = `${month}/${day}/${year}, ${hours}:${minutes}`
+    const small = width < smallDevice
+
+    const date = new Date(timestamp)
+    const minutes = date.getMinutes()
+    const hours = date.getHours()
+    const month = date.getUTCMonth() + 1 // months from 1-12
+    const day = date.getUTCDate()
+    const year = date.getUTCFullYear()
+    const lastUpdated = `${month}/${day}/${year}, ${hours}:${minutes}`
+
     return (
       <Header small={small} role='banner' style={{opacity}}>
         <div>
@@ -314,7 +314,6 @@ class Banner extends Component {
 const mapStateToProps = (state) => {
   let { crypto, display } = state
   let { width, timestamp } = display
-  // let coinsById = _.keyBy(crypto, 'id')
   let coinsById = crypto
   const noData = Object.keys(crypto).length === 0
   return {

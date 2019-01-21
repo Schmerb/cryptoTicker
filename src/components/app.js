@@ -50,8 +50,8 @@ class App extends Component {
   }
 
   setScreenDimensions = ({width, height}) => {
-    console.log('setScreenDimensions')
-    console.log({width, height})
+    // console.log('setScreenDimensions')
+    // console.log({width, height})
     let { dispatch } = this.props
     dispatch(updateDimensions({width, height}))
   }

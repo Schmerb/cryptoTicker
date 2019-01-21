@@ -7,8 +7,8 @@ export const fetchExchangeRates = () => new Promise((resolve, reject) => {
     .then(res => {
       let { base, rates } = res
       let { USD, GBP, EUR, JPY, KRW } = rates
-      console.log({USD, GBP, EUR, JPY, KRW})
-      console.log({fx})
+      // console.log({USD, GBP, EUR, JPY, KRW})
+      // console.log({fx})
 
       if (typeof fx !== 'undefined' && fx.rates) {
         fx.rates = rates

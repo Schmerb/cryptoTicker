@@ -10,10 +10,10 @@ export function fetchCoins (store, limit = 10) {
   fetch(url)
     .then(res => res.json())
     .then(res => {
-      console.log({res})
-      console.log({store})
+      // console.log({res})
+      // console.log({store})
       let time = Date.now()
-      console.log({time})
+      // console.log({time})
       store.dispatch(updateFetching(false))
       store.dispatch(updateCoinInfo(_.keyBy(res, 'id')))
       store.dispatch(updateTimestamp(time))

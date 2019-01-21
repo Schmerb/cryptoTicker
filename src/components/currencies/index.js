@@ -4,12 +4,10 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import ReactTable from 'react-table'
 import numeral from 'numeral'
-import fx from 'money'
 
-// import DetectScreenSize from 'components/detectScreenSize'
 import CoinItem from './coinItem'
 
-import { format, convert } from 'utils/'
+import { convert } from 'utils/'
 import { smallDevice } from 'utils/styles'
 import { currencies, ArrowUp, ArrowDown } from 'utils/icons'
 
@@ -113,7 +111,6 @@ class Currencies extends Component {
    */
   getTheadProps = () =>
     (state, rowInfo, column) => {
-      // console.log({rowInfo, column})
       let { width } = this.props
       return {
         className: width < smallDevice ? 'no-padding ' : '',
@@ -126,13 +123,12 @@ class Currencies extends Component {
 
     getTheadThProps = () =>
       (state, rowInfo, column) => {
-        // console.log({rowInfo, column})
         let { width } = this.props
         return {
           style: width < smallDevice ? {paddingLeft: '0px'} : {},
 
           onClick: evt => {
-            console.log('Click getTheadThProps', ({evt}))
+            // console.log('Click getTheadThProps', ({evt}))
           }
         }
       }
@@ -154,9 +150,9 @@ class Currencies extends Component {
         let { id } = rowInfo.original
         let { history } = this.props
 
-        console.log('Click row', ({rowInfo}))
-        console.log(rowInfo.original)
-        console.log(`/app/${id}`)
+        // console.log('Click row', ({rowInfo}))
+        // console.log(rowInfo.original)
+        // console.log(`/app/${id}`)
 
         history.push({
           pathname: `/app/${id}`
@@ -165,18 +161,9 @@ class Currencies extends Component {
     }
   }
 
-  setScreenDimensions = ({width, height}) => {
-    console.log('setScreenDimensions')
-    console.log({width, height})
-  }
-
   renderOptions= () => {
-    let { crypto, currency, noData, width } = this.props
-    console.log(_.cloneDeep(crypto))
+    let { crypto, currency } = this.props
     let options = _.orderBy(crypto, 'rank')
-    // options = _.sort(options, 'rank')
-    console.log({crypto})
-    console.log({options})
     return (
       <CoinList>
         {_.map(options, opt => {
@@ -188,31 +175,23 @@ class Currencies extends Component {
   }
 
   render () {
-    let { crypto, noData, width } = this.props
+    let { crypto, noData } = this.props
     const data = Object.values(crypto)
-
-    console.log({width})
-    console.log({'width < 650': width < smallDevice})
-
-    const renderTable = () => <ReactTable
-      loading={noData}
-      defaultPageSize={10}
-      showPagination={false}
-      data={data}
-      columns={this.renderColumns()}
-      getTdProps={this.getTdProps}
-      getTheadProps={this.getTheadProps}
-      getTheadThProps={this.getTheadThProps}
-      getTrProps={this.getTrProps}
-    />
 
     return (
       <Container>
         <TableContainer style={{opacity: noData ? 0 : 1}}>
-          { renderTable()}
-          {/* {width > 650
-            ? renderTable()
-            : this.renderOptions()} */}
+          <ReactTable
+            loading={noData}
+            defaultPageSize={10}
+            showPagination={false}
+            data={data}
+            columns={this.renderColumns()}
+            getTdProps={this.getTdProps}
+            getTheadProps={this.getTheadProps}
+            getTheadThProps={this.getTheadThProps}
+            getTrProps={this.getTrProps}
+          />
         </TableContainer>
       </Container>
     )
