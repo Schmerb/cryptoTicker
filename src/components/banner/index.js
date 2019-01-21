@@ -179,6 +179,8 @@ class Banner extends Component {
     // console.log({value})
     if (!value) return
 
+    this.setState({ visible: false })
+
     dispatch(updateCurrency(value))
   }
 
