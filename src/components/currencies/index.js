@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -6,8 +7,10 @@ import numeral from 'numeral'
 import fx from 'money'
 
 // import DetectScreenSize from 'components/detectScreenSize'
+import CoinItem from './coinItem'
 
 import { format, convert } from 'utils/'
+import { smallDevice } from 'utils/styles'
 import { currencies, ArrowUp, ArrowDown } from 'utils/icons'
 
 import './table.css'
@@ -31,12 +34,19 @@ const CenteredItem = styled.span`
   align-items: center;
   flex: 1;
 `
-
-const Index = styled.span`
-  width: 50px;
+const RightItem = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
 `
+
+const Index = styled.span``
 const Logo = styled.img`
   margin-right: 15px;
+`
+
+const CoinList = styled.ul`
+  padding: 0;
 `
 
 class Currencies extends Component {
@@ -52,20 +62,22 @@ class Currencies extends Component {
       accessor: 'name', // String-based value accessors!
       Cell: props => {
         const imgSrc = `/assets/coins/${props.original.symbol.toLowerCase()}.svg`
+        let { width } = this.props
         return (
           <CenteredItem className='number'>
-            <Index>{++props.index}</Index> <Logo src={imgSrc} /> {props.value}
+            <Index style={{width: width < smallDevice ? '20px' : '50px'}}>{++props.index}</Index> <Logo src={imgSrc} /> {props.value}
           </CenteredItem>
         )
       } // Custom cell components!
     }, {
       Header: 'PRICE',
       accessor: d => {
-        let { currency } = this.props
+        let { currency, width } = this.props
         let currentPrice = convert(d['price_usd'], currency)
         const price = numeral(currentPrice).format('0,0.00')
         const CurrencySym = currencies[currency]
-        return <CenteredItem style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {price}</CenteredItem>
+        const justifyContent = width < smallDevice ? 'center' : 'flex-start'
+        return <CenteredItem style={{justifyContent, fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {price}</CenteredItem>
       },
       id: 'price_'
       // Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
@@ -77,7 +89,8 @@ class Currencies extends Component {
         let currentMarketCap = convert(d[`market_cap_usd`], currency)
         const marketCap = numeral(currentMarketCap).format('0,0')
         const CurrencySym = currencies[currency]
-        return <CenteredItem style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {marketCap}</CenteredItem>
+        let Item = this.props.width < smallDevice ? RightItem : CenteredItem
+        return <Item style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {marketCap}</Item>
       } // Custom value accessors!
     }, {
       Header: '24HR CHANGE',
@@ -86,7 +99,8 @@ class Currencies extends Component {
         let positive = percentChange >= 0
         let color = positive ? 'green' : 'red'
         let marginLeft = positive ? '5px' : '0' // accounts for negative symbol of negative/red items
-        return <CenteredItem style={{color, marginLeft}}>{percentChange} % <span style={{marginLeft: '10px'}}>{positive ? <ArrowUp /> : <ArrowDown /> }</span></CenteredItem>
+        let Item = this.props.width < smallDevice ? RightItem : CenteredItem
+        return <Item style={{color, marginLeft}}>{percentChange} % <span style={{marginLeft: '10px'}}>{positive ? <ArrowUp /> : <ArrowDown /> }</span></Item>
       },
       id: 'change24_'
     }]
@@ -100,7 +114,9 @@ class Currencies extends Component {
   getTheadProps = () =>
     (state, rowInfo, column) => {
       // console.log({rowInfo, column})
+      let { width } = this.props
       return {
+        className: width < smallDevice ? 'no-padding ' : '',
         style: { },
         onClick: evt => {
           console.log('Click row', ({evt}))
@@ -111,8 +127,10 @@ class Currencies extends Component {
     getTheadThProps = () =>
       (state, rowInfo, column) => {
         // console.log({rowInfo, column})
+        let { width } = this.props
         return {
-          style: { },
+          style: width < smallDevice ? {paddingLeft: '0px'} : {},
+
           onClick: evt => {
             console.log('Click getTheadThProps', ({evt}))
           }
@@ -125,10 +143,11 @@ class Currencies extends Component {
    * @memberof Currencies
    */
   getTrProps = (state, rowInfo, column) => {
+    let { width } = this.props
     return {
       style: {
         padding: '15px',
-        paddingLeft: '15%',
+        paddingLeft: width < smallDevice ? '0px' : '15%',
         borderBottom: '0.1px solid rgba(0,0,0,0.1)'
       },
       onClick: evt => {
@@ -151,13 +170,29 @@ class Currencies extends Component {
     console.log({width, height})
   }
 
+  renderOptions= () => {
+    let { crypto, currency, noData, width } = this.props
+    console.log(_.cloneDeep(crypto))
+    let options = _.orderBy(crypto, 'rank')
+    // options = _.sort(options, 'rank')
+    console.log({crypto})
+    console.log({options})
+    return (
+      <CoinList>
+        {_.map(options, opt => {
+          console.log({opt})
+          return <CoinItem coin={opt} key={opt.id} currency={currency} />
+        })}
+      </CoinList>
+    )
+  }
+
   render () {
     let { crypto, noData, width } = this.props
     const data = Object.values(crypto)
-    // let fxReady = typeof fx !== 'undefined'
-    // let noData = Object.keys(crypto).length === 0 || !fxReady
 
     console.log({width})
+    console.log({'width < 650': width < smallDevice})
 
     const renderTable = () => <ReactTable
       loading={noData}
@@ -173,11 +208,11 @@ class Currencies extends Component {
 
     return (
       <Container>
-        {/* <DetectScreenSize
-          handleResize={this.setScreenDimensions}
-          getDimensions={this.setScreenDimensions} /> */}
         <TableContainer style={{opacity: noData ? 0 : 1}}>
-          {renderTable()}
+          { renderTable()}
+          {/* {width > 650
+            ? renderTable()
+            : this.renderOptions()} */}
         </TableContainer>
       </Container>
     )

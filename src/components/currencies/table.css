@@ -7,12 +7,20 @@
   padding: 15px;
 }
 
+
+@media only screen and (max-width: 650px) {
+  .ReactTable .rt-thead.-header{
+    padding-left: 0;
+  }
+}
+
+
 .rt-thead {
   background-color: #dde2f9;
   background-color: #ebf0f4;
   color: #888490;
   border-top: 1px solid rgba(0,0,0,0.1);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(109, 75, 75, 0.1);
   padding-left: 15%;
 }
 

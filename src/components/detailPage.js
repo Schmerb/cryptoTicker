@@ -6,6 +6,7 @@ import numeral from 'numeral'
 import fx from 'money'
 
 import { format, convert } from 'utils/'
+import { smallDevice } from 'utils/styles'
 import { currencies } from 'utils/icons'
 import { textBlue, green, darkBlue, lighterBlue, superLightBlue } from 'utils/colors'
 
@@ -16,6 +17,7 @@ import { textBlue, green, darkBlue, lighterBlue, superLightBlue } from 'utils/co
 
 const Container = styled.div`
   display: flex;
+  ${props => props.small && 'flex-direction: column;'}
   align-items: flexx-start;
   color: ${textBlue};
   height: 100%;
@@ -118,7 +120,7 @@ class DetailPage extends Component {
   }
 
   render () {
-    let { match, currency, coinsById } = this.props
+    let { match, currency, coinsById, width } = this.props
     let { id } = match.params
 
     if (Object.keys(coinsById).length === 0) {
@@ -150,15 +152,33 @@ class DetailPage extends Component {
 
     const CurrencySym = currencies[currency]
 
+    let small = width < smallDevice
+    let maxHeight = small ? '100px' : '9999px'
+    let centered = {
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+
+    let rankStyle = {
+      maxHeight,
+      position: 'relative'
+    }
+    if (small) {
+      rankStyle = {
+        ...rankStyle,
+        ...centered
+      }
+    }
+
     return (
-      <Container>
-        <Flex style={{position: 'relative'}}>
-          <Rank>
+      <Container small={small}>
+        <Flex style={rankStyle}>
+          <Rank style={small ? {position: 'relative', top: 'auto', left: 'auto', transform: 'none'} : {}}>
             <span style={{marginRight: '10px'}}>RANK</span>
             <Circle>{rank}</Circle>
           </Rank>
         </Flex>
-        <Information>
+        <Information style={small ? {paddingLeft: '15px'} : {}}>
           <Flex>
             <Box>
               <DataWrap>
@@ -194,14 +214,14 @@ class DetailPage extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let { crypto } = state
-  // let coinsById = _.keyBy(crypto, 'id')
-  let coinsById = crypto
+  const { crypto, display } = state
+  const { currency, width } = display
+  const coinsById = crypto
 
   return {
+    width,
     coinsById,
-    crypto: state.crypto,
-    currency: state.display.currency
+    currency
   }
 }
 

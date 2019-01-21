@@ -9,7 +9,7 @@ export default class DetectScreenSize extends Component {
     }
 
     // settings throttling resize event
-    this.delay = 250 // delay between calls
+    this.delay = 100 // delay between calls
     this.throttled = false // are we currently throttled?
     this.calls = 0
   }

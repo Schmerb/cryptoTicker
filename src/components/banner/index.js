@@ -10,6 +10,7 @@ import DetectOutsideClick from 'components/detectOutsideClick'
 import { updateCurrency } from 'actions/display'
 
 import { format, convert } from 'utils/'
+import { smallDevice } from 'utils/styles'
 import { superLightBlue, textGrey } from 'utils/colors'
 import { currencies, ArrowLeft, ArrowLeftCircle, CaretDown } from 'utils/icons'
 
@@ -25,9 +26,9 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 80px;
-  padding: 0 50px;
-  z-index: 1;
+  min-height: ${props => props.small ? '100px' : '80px'};
+  padding: ${props => props.small ? '5px' : '0 50px'};
+  z-index: 9999;
   transition: all 0.5s;
 `
 
@@ -202,7 +203,7 @@ class Banner extends Component {
   renderTitle = () => <Title><Link to='/app'>VFCrypto</Link></Title>
 
   renderDetails = () => {
-    let { location, coinsById, currency } = this.props
+    let { location, coinsById, currency, width } = this.props
     let { pathname } = location
 
     if (Object.keys(coinsById).length === 0) {
@@ -219,6 +220,8 @@ class Banner extends Component {
     const currentPrice = numeral(price).format('0,0.00')
     const CurrencySym = currencies[currency]
 
+    const small = width < smallDevice
+
     return (
       <DetailsBanner>
         <Circle>
@@ -233,6 +236,7 @@ class Banner extends Component {
         </NameWrap>
         <PriceWrap>
           <span><Symbol><CurrencySym /></Symbol> {currentPrice}</span>
+          {small && this.renderCustomSelect()}
         </PriceWrap>
       </DetailsBanner>
     )
@@ -248,7 +252,7 @@ class Banner extends Component {
 
   renderCustomSelect = () => {
     let { visible } = this.state
-    let { currency } = this.props
+    let { currency, width } = this.props
     let baseCurrencies = ['USD', 'GBP', 'EUR', 'JPY', 'KRW']
     return (
       <DetectOutsideClick handleClickAtChild={this.handleOutsideClick}>
@@ -281,26 +285,31 @@ class Banner extends Component {
 
   render () {
     let { opacity } = this.state
+    let { width, location } = this.props
+    let small = width < smallDevice
     console.log({opacity})
+    console.log({small})
     return (
-      <Header role='banner' style={{opacity}}>
+      <Header small={small} role='banner' style={{opacity}}>
         <div>
           <Route exact path='/app' component={this.renderTitle} />
           <Route exact path='/app/:id' component={this.renderDetails} />
         </div>
         {/* <Route path='/app' component={this.renderCustomSelect} /> */}
-        {this.renderCustomSelect()}
+        {(location.pathname === '/app' || !small) && this.renderCustomSelect()}
       </Header>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  let { crypto } = state
+  let { crypto, display } = state
+  let { width } = display
   // let coinsById = _.keyBy(crypto, 'id')
   let coinsById = crypto
   const noData = Object.keys(crypto).length === 0
   return {
+    width,
     noData,
     coinsById,
     crypto: state.crypto,
