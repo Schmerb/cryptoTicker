@@ -55,6 +55,8 @@ class Currencies extends Component {
   }
 
   renderColumns = () => {
+    let { width } = this.props
+    let small = width < smallDevice
     return [{
       Header: 'CRYPTOCURRENCY',
       accessor: 'name', // String-based value accessors!
@@ -82,6 +84,7 @@ class Currencies extends Component {
     }, {
       Header: 'MARKET CAP',
       id: 'marketCap', // Required because our accessor is not a string
+      show: !small, /// hides column for smaller views
       accessor: d => {
         let { currency } = this.props
         let currentMarketCap = convert(d[`market_cap_usd`], currency)
