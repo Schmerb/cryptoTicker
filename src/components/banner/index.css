@@ -26,7 +26,7 @@
     margin-top: 10px;
   }
   .custom-select-el {
-    top: 0;
-    left: 0;
+    top: 100%;
+    left: 50%;
   }
 }

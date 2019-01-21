@@ -65,13 +65,13 @@ class App extends Component {
   }
 
   render () {
-    let { noData, location } = this.props
+    let { noData, location, fetching } = this.props
     if (location.pathname === '/') {
       return <Redirect from='/' to='/app' />
     }
     return (
       <Container>
-        {noData && this.renderSpinner()}
+        {(fetching || noData) && this.renderSpinner()}
         <Banner />
         <DetectScreenSize
           handleResize={this.setScreenDimensions}
@@ -87,9 +87,10 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   let { crypto, display } = state
-  let { currency } = display
+  let { currency, fetching } = display
   let noData = Object.keys(crypto).length === 0
   return {
+    fetching,
     noData,
     crypto,
     currency

@@ -1,9 +1,15 @@
-import { UPDATE_CURRENCY, UPDATE_DIMENSIONS } from 'actions/display'
+import {
+  UPDATE_CURRENCY,
+  UPDATE_DIMENSIONS,
+  UPDATE_TIMESTAMP,
+  UPDATE_FETCHING
+} from 'actions/display'
 
 const initialState = {
   currency: 'USD',
   width: window.innerWidth,
-  height: window.innerHeight
+  height: window.innerHeight,
+  fetching: false
 }
 
 export default function reducer (state = initialState, action) {
@@ -18,6 +24,16 @@ export default function reducer (state = initialState, action) {
         ...state,
         width: action.width,
         height: action.height
+      }
+    case UPDATE_TIMESTAMP:
+      return {
+        ...state,
+        timestamp: action.timestamp
+      }
+    case UPDATE_FETCHING:
+      return {
+        ...state,
+        fetching: action.fetching
       }
     default:
       return state

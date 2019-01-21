@@ -10,3 +10,15 @@ export const updateDimensions = ({width, height}) => ({
   width,
   height
 })
+
+export const UPDATE_TIMESTAMP = 'UPDATE_TIMESTAMP'
+export const updateTimestamp = (timestamp) => ({
+  type: UPDATE_TIMESTAMP,
+  timestamp
+})
+
+export const UPDATE_FETCHING = 'UPDATE_FETCHING'
+export const updateFetching = (fetching) => ({
+  type: UPDATE_FETCHING,
+  fetching
+})

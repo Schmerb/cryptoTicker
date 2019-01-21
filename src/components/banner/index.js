@@ -27,7 +27,7 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   min-height: ${props => props.small ? '100px' : '80px'};
-  padding: ${props => props.small ? '5px' : '0 50px'};
+  padding: ${props => props.small ? '10px' : '10px 50px'};
   z-index: 9999;
   transition: all 0.5s;
 `
@@ -201,6 +201,7 @@ class Banner extends Component {
   }
 
   renderTitle = () => <Title><Link to='/app'>VFCrypto</Link></Title>
+  // renderTimestamp = () => <div>{timestamp}</div>
 
   renderDetails = () => {
     let { location, coinsById, currency, width } = this.props
@@ -285,15 +286,23 @@ class Banner extends Component {
 
   render () {
     let { opacity } = this.state
-    let { width, location } = this.props
+    let { width, location, timestamp } = this.props
     let small = width < smallDevice
     console.log({opacity})
     console.log({small})
+    let date = new Date(timestamp)
+    let minutes = date.getMinutes()
+    let hours = date.getHours()
+    let month = date.getUTCMonth() + 1 // months from 1-12
+    let day = date.getUTCDate()
+    let year = date.getUTCFullYear()
+    let lastUpdated = `${month}/${day}/${year}, ${hours}:${minutes}`
     return (
       <Header small={small} role='banner' style={{opacity}}>
         <div>
           <Route exact path='/app' component={this.renderTitle} />
           <Route exact path='/app/:id' component={this.renderDetails} />
+          <div><em>Last updated: {lastUpdated}</em></div>
         </div>
         {/* <Route path='/app' component={this.renderCustomSelect} /> */}
         {(location.pathname === '/app' || !small) && this.renderCustomSelect()}
@@ -304,11 +313,12 @@ class Banner extends Component {
 
 const mapStateToProps = (state) => {
   let { crypto, display } = state
-  let { width } = display
+  let { width, timestamp } = display
   // let coinsById = _.keyBy(crypto, 'id')
   let coinsById = crypto
   const noData = Object.keys(crypto).length === 0
   return {
+    timestamp,
     width,
     noData,
     coinsById,
