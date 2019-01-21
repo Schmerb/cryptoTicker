@@ -297,7 +297,8 @@ class Banner extends Component {
 
 const mapStateToProps = (state) => {
   let { crypto } = state
-  let coinsById = _.keyBy(crypto, 'id')
+  // let coinsById = _.keyBy(crypto, 'id')
+  let coinsById = crypto
   const noData = Object.keys(crypto).length === 0
   return {
     noData,

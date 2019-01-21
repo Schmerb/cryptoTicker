@@ -152,13 +152,10 @@ class Currencies extends Component {
   }
 
   render () {
-    let { crypto, noData } = this.props
+    let { crypto, noData, width } = this.props
     const data = Object.values(crypto)
     // let fxReady = typeof fx !== 'undefined'
     // let noData = Object.keys(crypto).length === 0 || !fxReady
-
-    const width = window.innerWidth
-    const height = window.innerHeight
 
     console.log({width})
 
@@ -180,7 +177,7 @@ class Currencies extends Component {
           handleResize={this.setScreenDimensions}
           getDimensions={this.setScreenDimensions} /> */}
         <TableContainer style={{opacity: noData ? 0 : 1}}>
-          {width > 660 && renderTable()}
+          {renderTable()}
         </TableContainer>
       </Container>
     )
@@ -189,11 +186,13 @@ class Currencies extends Component {
 
 const mapStateToProps = (state) => {
   let { crypto, display } = state
+  let { currency, width } = display
   const noData = Object.keys(crypto).length === 0
   return {
+    width,
     noData,
     crypto,
-    currency: display.currency
+    currency
   }
 }
 

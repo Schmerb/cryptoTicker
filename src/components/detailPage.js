@@ -195,7 +195,9 @@ class DetailPage extends Component {
 
 const mapStateToProps = (state) => {
   let { crypto } = state
-  let coinsById = _.keyBy(crypto, 'id')
+  // let coinsById = _.keyBy(crypto, 'id')
+  let coinsById = crypto
+
   return {
     coinsById,
     crypto: state.crypto,

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { API_ENDPOINT } from 'config'
 
 import { updateCoinInfo } from 'actions/crypto'
@@ -10,7 +11,7 @@ export function fetchCoins (store, limit = 10) {
     .then(res => {
       console.log({res})
       console.log({store})
-      store.dispatch(updateCoinInfo(res))
+      store.dispatch(updateCoinInfo(_.keyBy(res, 'id')))
     })
     .catch(err => console.error(err))
 }
