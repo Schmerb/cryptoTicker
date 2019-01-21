@@ -164,13 +164,18 @@ const LogoImg = styled.img`
   margin-right: 10px;
 `
 
+const Timestamp = styled.div`
+  transition: all 1s ease-in-out;
+`
+
 class Banner extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
       opacity: 0, // starting value
-      visible: false // used to animate the custom select menu menu
+      visible: false, // used to animate the custom select menu menu
+      timeUpdated: false // used to highlight current timestamp when new data ios fetched and updated
     }
   }
 
@@ -181,6 +186,13 @@ class Banner extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.noData !== this.props.noData) {
       this.setState({ opacity: 1 })
+    }
+
+    if (prevProps.timestamp !== this.props.timestamp) {
+      this.setState({ timeUpdated: true })
+      setTimeout(() => {
+        this.setState({ timeUpdated: false })
+      }, 2000)
     }
   }
 
@@ -298,7 +310,7 @@ class Banner extends Component {
   }
 
   render () {
-    let { opacity } = this.state
+    let { opacity, timeUpdated } = this.state
     let { width, location, timestamp } = this.props
     const small = width < smallDevice
 
@@ -315,7 +327,7 @@ class Banner extends Component {
         <div>
           <Route exact path='/app' component={this.renderTitle} />
           <Route exact path='/app/:id' component={this.renderDetails} />
-          <div><em>Last updated: {lastUpdated}</em></div>
+          <Timestamp style={timeUpdated ? {color: 'green'} : {}}><em>Last updated: {lastUpdated}</em></Timestamp>
         </div>
         {/* <Route path='/app' component={this.renderCustomSelect} /> */}
         {(location.pathname === '/app' || !small) && this.renderCustomSelect()}
