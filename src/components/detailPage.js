@@ -87,6 +87,10 @@ const Rank = styled.div`
 const Num = styled.span`
   font-size: 1.4rem;
   color: #fff;
+  @media (max-width: ${smallDevice}px) {
+    font-size: 1rem;
+  }
+
 `
 
 const Sym = styled.span`
