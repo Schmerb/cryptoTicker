@@ -94,7 +94,7 @@ class Currencies extends Component {
         return <Item style={{fontSize: '1.1rem'}}><Symbol><CurrencySym size='sm' /></Symbol> {marketCap}</Item>
       } // Custom value accessors!
     }, {
-      Header: '24HR CHANGE',
+      Header: '24HR +/-',
       accessor: d => {
         let percentChange = numeral(d.percent_change_24h).format('0.00')
         let positive = percentChange >= 0
