@@ -53,11 +53,18 @@ const InnerWrap = styled.div`
     margin: 0;
     padding: 0;
   }
+
+  @media (max-width: ${smallDevice}px) {
+    font-size: 0.7rem;
+  }
 `
 
 const PriceWrap = styled.div`
   font-size: 1.5rem;
   margin-left: 25px;
+  @media (max-width: ${smallDevice}px) {
+    font-size: 1.3rem;
+  }
 `
 
 // const Select = styled.select``
@@ -137,6 +144,10 @@ const Circle = styled.div`
   height: 35px;
   margin-right: 25px;
   border-radius: 50%;
+
+  @media (max-width: ${smallDevice}px) {
+    margin-right: 5px;
+  }
 
   a {
     width: 100%;
